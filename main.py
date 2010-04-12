@@ -51,10 +51,26 @@ def adduser(user,key,secret):
 		R.hset('user:%s' %user.screen_name,'name', user.name)
 		R.hset('user:%s' %user.screen_name,'key', key)
 		R.hset('user:%s' %user.screen_name,'secret', secret)
+		R.hset('user:%s' %user.screen_name,'followers_count',user.follower_count)
+		R.hset('user:%s' %user.screen_name,'friends_count',user.friends_count)
+		R.hset('user:%s' %user.screen_name,'location',user.location)
+		R.hset('user:%s' %user.screen_name,'url',user.url)
+		R.hset('user:%s' %user.screen_name,'description',user.description)
 		return True
 	else:
 		return False
-	
+def addstatus(status,user_screen_name):	
+	if R.sadd("statuses", status.id):
+		R.hset('status:%s' %status.id,'id', status.id)
+		R.hset('status:%s' %status.id,'text', status.text)
+		R.hset('status:%s' %status.id,'source', status.source)
+		R.hset('status:%s' %status.id,'created_at', status.created_at)
+		R.hset('status:%s' %status.id,'in_reply_to_screen_name', status.in_reply_to_screen_name)
+		R.hset('status:%s' %status.id,'in_reply_to_status_id', status.in_reply_to_status_id)
+		R.hset('status:%s' %status.id,'user', user_screen_name)
+		return True
+	else:
+		return False
 @route('/static/:filename')
 def static_file(filename):
     send_file(filename, root='/home/kdehdash/Downloads/twitter/static')
